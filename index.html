@@ -43,7 +43,7 @@
             margin: 0;
         }
         </style>
-        <title></title>
+        <title>Clustering Map</title>
     </head>
     <body>
         <div id="map">
@@ -52,16 +52,71 @@
                 <div id="popup-content"></div>
             </div>
         </div>
+        
+        <!-- Deine bereits eingebundenen Scripts -->
         <script src="resources/qgis2web_expressions.js"></script>
         <script src="resources/polyfills.js"></script>
         <script src="./resources/functions.js"></script>
         <script src="./resources/ol.js"></script>
         <script src="./resources/ol-layerswitcher.js"></script>
         <script src="resources/ol-geocoder.js"></script>
-        <script src="layers/IUENNA_Metadata06_RET_1.js"></script><script src="layers/IUENNA_Metadata05_TAL_2.js"></script><script src="layers/IUENNA_Metadata04_STE_3.js"></script><script src="layers/IUENNA_Metadata03_JAU_4.js"></script><script src="layers/IUENNA_Metadata02_HB_5.js"></script><script src="layers/IUENNA_Metadata01_GLO_6.js"></script><script src="layers/IUENNAVoronoi_7.js"></script><script src="layers/IUENNABegrenzendeGeometrieadaptiert_8.js"></script>
-        <script src="styles/IUENNA_Metadata06_RET_1_style.js"></script><script src="styles/IUENNA_Metadata05_TAL_2_style.js"></script><script src="styles/IUENNA_Metadata04_STE_3_style.js"></script><script src="styles/IUENNA_Metadata03_JAU_4_style.js"></script><script src="styles/IUENNA_Metadata02_HB_5_style.js"></script><script src="styles/IUENNA_Metadata01_GLO_6_style.js"></script><script src="styles/IUENNAVoronoi_7_style.js"></script><script src="styles/IUENNABegrenzendeGeometrieadaptiert_8_style.js"></script>
+        <script src="layers/IUENNA_Metadata06_RET_1.js"></script>
+        <script src="layers/IUENNA_Metadata05_TAL_2.js"></script>
+        <script src="layers/IUENNA_Metadata04_STE_3.js"></script>
+        <script src="layers/IUENNA_Metadata03_JAU_4.js"></script>
+        <script src="layers/IUENNA_Metadata02_HB_5.js"></script>
+        <script src="layers/IUENNA_Metadata01_GLO_6.js"></script>
+        <script src="layers/IUENNAVoronoi_7.js"></script>
+        <script src="layers/IUENNABegrenzendeGeometrieadaptiert_8.js"></script>
+        <script src="styles/IUENNA_Metadata06_RET_1_style.js"></script>
+        <script src="styles/IUENNA_Metadata05_TAL_2_style.js"></script>
+        <script src="styles/IUENNA_Metadata04_STE_3_style.js"></script>
+        <script src="styles/IUENNA_Metadata03_JAU_4_style.js"></script>
+        <script src="styles/IUENNA_Metadata02_HB_5_style.js"></script>
+        <script src="styles/IUENNA_Metadata01_GLO_6_style.js"></script>
+        <script src="styles/IUENNAVoronoi_7_style.js"></script>
+        <script src="styles/IUENNABegrenzendeGeometrieadaptiert_8_style.js"></script>
         <script src="./layers/layers.js" type="text/javascript"></script> 
         <script src="./resources/Autolinker.min.js"></script>
         <script src="./resources/qgis2web.js"></script>
+
+        <!-- Cluster-Funktionalität hinzufügen -->
+        <script>
+        // Definiere die Cluster-Quelle
+        var distance = 40; // Abstand, in dem Marker geclustert werden
+        var clusterSource = new ol.source.Cluster({
+            distance: distance,
+            source: IUENNA_Metadata06_RET_1 // Beispielhaft für einen Layer, wähle den Layer, den du clustern willst
+        });
+
+        // Definiere die Cluster-Ebene
+        var clusterLayer = new ol.layer.Vector({
+            source: clusterSource,
+            style: function (feature) {
+                var size = feature.get('features').length;
+                var style = new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: 10,
+                        stroke: new ol.style.Stroke({
+                            color: '#fff'
+                        }),
+                        fill: new ol.style.Fill({
+                            color: '#3399CC'
+                        })
+                    }),
+                    text: new ol.style.Text({
+                        text: size.toString(),
+                        fill: new ol.style.Fill({
+                            color: '#fff'
+                        })
+                    })
+                });
+                return style;
+            }
+        });
+
+        // Füge die Cluster-Ebene zur Karte hinzu
+        map.addLayer(clusterLayer);
+        </script>
     </body>
 </html>
